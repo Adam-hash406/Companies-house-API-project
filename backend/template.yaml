@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  CompaniesHouseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.lambda_handler
+      Runtime: python3.10
+      CodeUri: lambda/
+      Environment:
+        Variables:
+          COMPANIES_HOUSE_API_KEY: YOUR_API_KEY_HERE
+          DOCUMENT_BUCKET: !Ref DocumentBucket
+      Events:
+        Search:
+          Type: Api
+          Properties:
+            Path: /search
+            Method: get
+        FilingHistory:
+          Type: Api
+          Properties:
+            Path: /company/{company_number}/filing-history
+            Method: get
+        Document:
+          Type: Api
+          Properties:
+            Path: /document/{document_id}
+            Method: get
+
+  DocumentBucket:
+    Type: AWS::S3::Bucket
